@@ -8,21 +8,28 @@
 {% endblock %} 
 
 {% block content %} 
-    {% for task in tasks %}
-        <article class="task">
-            <header>
-                <div>
-                    <h1>{{ task['title'] }}</h1>
-                    <div class="about">by {{ task['username'] }} on {{ task['created'].strftime('%Y-%m-%d') }}</div>
-                </div>
-                {% if g.user['id'] == task['creator_id'] %} 
-                    <a class="action" href="{{ url_for('tasklist.update', id=task['id']) }}">Edit</a>
-                {% endif %} 
-            </header>
-            <p class="body">{{ task['body'] }}</p>
-        </article>
-        {% if not loop.last %} 
-            <hr>
-        {% endif %} 
-    {% endfor %} 
+    <table class="tasklist">
+        <tr>
+            <th>Task</th>
+            <th>Created by</th>
+            <th>Created on</th>
+            <th><p style="font-size:20px">&#9989</p></th>
+        </tr>
+        {% for task in tasks %}
+        <tr>
+            <td><a href="{{ url_for('tasklist.update', id=task['id']) }}">{{ task['title'] }}</a> </td>
+            <td>{{ task['username'] }}</td>
+            <td>{{ task['created'].strftime("%Y-%m-%d") }}</td>
+            {% if task['completed'] == 1 %}
+                <td><p style="font-size:20px">&#9989</p></td>
+            {% else %}
+                <td><input type="checkbox" class="task-check" id="{{'check-{0}'.format(task['id'])}}" name="{{'check-{0}'.format(task['id'])}}" value=""></td>
+            {% endif %}
+        </tr>
+        {% endfor %} 
+    </table> 
 {% endblock %} 
+
+<!-- 9989 = check mark or 2705 -->
+<!-- 11036 = empty square or 2B1C -->
+<!-- 128306 = another square or 1F532 -->

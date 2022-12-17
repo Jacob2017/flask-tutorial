@@ -24,3 +24,6 @@ nav ul li a, nav ul li span, header .action { display: block; padding: 0.5rem; }
 .content textarea { min-height: 12em; resize: vertical; }
 input.danger { color: #cc2f2e; }
 input[type=submit] { align-self: start; min-width: 10em; }
+th, td {padding: 15px;}
+.task-check{ width:20px; height:20px; accent-color:#77B255}
+.check-header{ font-size: 16px;}
