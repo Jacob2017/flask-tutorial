@@ -44,11 +44,11 @@ def create():
     
     return render_template('task/create.html')
 
-def get_post(id, check_creator=True):
+def get_task(id, check_creator=True):
     task = get_db().execute(
         'SELECT t.id, title, body, created, creator_id, username'
         ' FROM task t JOIN user u ON t.creator_id = u.id'
-        ' WHERE p.id = ?',
+        ' WHERE t.id = ?',
         (id,)
     ).fetchone()
 
@@ -63,7 +63,7 @@ def get_post(id, check_creator=True):
 @bp.route('/<int:id>/update', methods=('GET', 'POST'))
 @login_required
 def update(id):
-    task = get_post(id)
+    task = get_task(id)
 
     if request.method == 'POST':
         title = request.form['title']
@@ -90,7 +90,7 @@ def update(id):
 @bp.route('/<int:id>/delete', methods=('POST',))
 @login_required
 def delete(id):
-    get_post(id)
+    get_task(id)
     db = get_db()
     db.execute('DELETE FROM task WHERE id = ?', (id,))
     db.commit()
