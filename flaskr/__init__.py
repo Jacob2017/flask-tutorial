@@ -34,8 +34,8 @@ def create_app(test_config=None):
     from . import auth
     app.register_blueprint(auth.bp)
 
-    from . import task
-    app.register_blueprint(task.bp)
+    from . import tasklist
+    app.register_blueprint(tasklist.bp)
     app.add_url_rule('/', endpoint='index')
 
     return app

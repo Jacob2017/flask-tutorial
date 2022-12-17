@@ -27,7 +27,7 @@ def test_author_required(app, client, auth):
     # change the post author to another user
     with app.app_context():
         db = get_db()
-        db.execute("UPDATE task SET creator_id = 2 WHERE id = 1")
+        db.execute("UPDATE tasklist SET creator_id = 2 WHERE id = 1")
         db.commit()
 
     auth.login()
@@ -52,7 +52,7 @@ def test_create(client,auth,app):
 
     with app.app_context():
         db = get_db()
-        count = db.execute('SELECT COUNT(id) FROM task').fetchone()[0]
+        count = db.execute('SELECT COUNT(id) FROM tasklist').fetchone()[0]
         assert count == 2
 
 def test_update(client, auth, app):
@@ -62,7 +62,7 @@ def test_update(client, auth, app):
 
     with app.app_context():
         db = get_db()
-        task = db.execute('SELECT * FROM task WHERE id == 1').fetchone()
+        task = db.execute('SELECT * FROM tasklist WHERE id == 1').fetchone()
         assert task['title'] == 'updated'
 
 @pytest.mark.parametrize('path', (

@@ -6,18 +6,18 @@ from werkzeug.exceptions import abort
 from flaskr.auth import login_required
 from flaskr.db import get_db
 
-bp = Blueprint('task', __name__)
+bp = Blueprint('tasklist', __name__)
 
 @bp.route('/')
 def index():
     db = get_db()
     tasks = db.execute(
         'SELECT t.id, title, body, created, creator_id, username'
-        ' FROM task t JOIN user u ON t.creator_id = u.id'
+        ' FROM tasklist t JOIN user u ON t.creator_id = u.id'
         ' WHERE completed != 1'
         ' ORDER BY created DESC'
     ).fetchall()
-    return render_template('task/index.html', tasks=tasks)
+    return render_template('tasklist/index.html', tasks=tasks)
 
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
@@ -35,19 +35,19 @@ def create():
         else:
             db = get_db()
             db.execute(
-                'INSERT INTO task (title, body, creator_id)'
+                'INSERT INTO tasklist (title, body, creator_id)'
                 ' VALUES (?,?,?)',
                 (title, body, g.user['id'])
             )
             db.commit()
-            return redirect(url_for('task.index'))
+            return redirect(url_for('tasklist.index'))
     
-    return render_template('task/create.html')
+    return render_template('tasklist/create.html')
 
 def get_task(id, check_creator=True):
     task = get_db().execute(
         'SELECT t.id, title, body, created, creator_id, username'
-        ' FROM task t JOIN user u ON t.creator_id = u.id'
+        ' FROM tasklist t JOIN user u ON t.creator_id = u.id'
         ' WHERE t.id = ?',
         (id,)
     ).fetchone()
@@ -78,20 +78,20 @@ def update(id):
         else:
             db = get_db()
             db.execute(
-                'UPDATE task SET title = ?, body = ?'
+                'UPDATE tasklist SET title = ?, body = ?'
                 ' WHERE id = ?',
                 (title, body, id)
             )
             db.commit()
-            return redirect(url_for('task.index'))
+            return redirect(url_for('tasklist.index'))
     
-    return render_template('task/update.html', task=task)
+    return render_template('tasklist/update.html', task=task)
 
 @bp.route('/<int:id>/delete', methods=('POST',))
 @login_required
 def delete(id):
     get_task(id)
     db = get_db()
-    db.execute('DELETE FROM task WHERE id = ?', (id,))
+    db.execute('DELETE FROM tasklist WHERE id = ?', (id,))
     db.commit()
-    return redirect(url_for('task.index'))
+    return redirect(url_for('tasklist.index'))
